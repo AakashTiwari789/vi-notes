@@ -1,5 +1,6 @@
 import noteModel from "../models/notes.model.js";
 import { createWritingSession } from "./writingSession.controller.js";
+import writingSessionModel from "../models/writingSession.model.js";
 
 export const createNote = async (req, res) => {
     const userId = req.userId;
@@ -135,7 +136,35 @@ export const editNoteById = async (req, res) => {
             return res.status(404).json({ error: 'Note not found' });
         }
 
-        const session = await createWritingSession({ userId });
+        // Reuse latest active session for this note+user (prevents duplicates)
+        const activeSession = await writingSessionModel
+            .findOne({
+                _id: { $in: note.sessions },
+                author: userId,
+                status: "active",
+            })
+            .sort({ startedAt: -1 });
+
+        if (activeSession) {
+            return res.status(200).json({
+                message: "Note editing resumed successfully",
+                note: {
+                    id: note._id,
+                    title: note.title,
+                    content: note.content,
+                    sessions: note.sessions,
+                },
+                session: {
+                    id: activeSession._id,
+                    status: activeSession.status,
+                    startedAt: activeSession.startedAt,
+                    content: note.content,
+                },
+            });
+        }
+
+        // No active session found -> create a new one
+        const session = await createWritingSession({ userId, title: note.title, content: note.content });
         // console.log("New writing session created for note editing:", session);
 
         note.sessions.push(session._id);
