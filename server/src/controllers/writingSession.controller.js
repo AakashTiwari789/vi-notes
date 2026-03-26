@@ -17,6 +17,7 @@ export const endWritingSessionById = async (req, res) => {
     const sessionId = req.params.sessionId;
 
     const {
+        title,
         content,
         totalTypedChars,
         totalPastedChars,
@@ -30,6 +31,7 @@ export const endWritingSessionById = async (req, res) => {
                 author: userId
             },
             {
+                title,
                 content,
                 totalTypedChars,
                 totalPastedChars,
@@ -50,7 +52,7 @@ export const endWritingSessionById = async (req, res) => {
                 // search the note by sessionId in the sessions array
                 sessions: sessionId
             },
-            { content },
+            { content, title },
             { returnDocument: 'after' }
         );
 
@@ -63,6 +65,28 @@ export const endWritingSessionById = async (req, res) => {
         });
     } catch (error) {
         console.error('Error in endWritingSessionById:', error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
+export const getWritingSessionHistoryById = async (req, res) => {
+    const userId = req.userId;
+    const sessionId = req.params.sessionId;
+
+    try {
+        const session = await writingSessionModel.findById(sessionId);
+
+        if (!session || session.length === 0) {
+            return res.status(404).json({ error: 'No writing session found for this note' });
+        }
+
+        return res.status(200).json({
+            message: "Writing session history retrieved successfully",
+            session
+        });
+
+    } catch (error) {
+        console.error('Error in getWritingSessionHistoryById:', error);
         res.status(500).json({ error: error.message });
     }
 };

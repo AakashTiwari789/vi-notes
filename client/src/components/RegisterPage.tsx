@@ -16,7 +16,7 @@ export function RegisterPage() {
     const onSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError("");
-        console.log("Registering with", { email, password });
+        // console.log("Registering with", { email, password });
 
         try {
             const res = await fetch(`${API}/auth/register`, {

@@ -6,6 +6,10 @@ const writingSessionSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
+    title: {
+        type: String,
+        default: `New Note + ${new Date().toLocaleString()}`
+    },
     content: {
         type: String,
         default: ''

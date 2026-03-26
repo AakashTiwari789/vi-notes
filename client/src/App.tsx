@@ -3,6 +3,7 @@ import { RequireAuth } from "./context/RequireAuth.tsx";
 import { LoginPage } from "./components/LoginPage.tsx";
 import { RegisterPage } from "./components/RegisterPage.tsx";
 import { NotesPage } from "./components/NotesPage.tsx";
+import { EditNotesPage } from "./components/EditNotesPage.tsx";
 
 export default function App() {
   return (
@@ -16,6 +17,15 @@ export default function App() {
         element={
           <RequireAuth>
             <NotesPage />
+          </RequireAuth>
+        }
+      />
+
+      <Route
+        path="/notes/:id/edit"
+        element={
+          <RequireAuth>
+            <EditNotesPage />
           </RequireAuth>
         }
       />
