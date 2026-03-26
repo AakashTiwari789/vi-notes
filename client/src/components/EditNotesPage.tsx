@@ -66,9 +66,12 @@ function VersionCard({ sessionId }: { sessionId: string }) {
 
             {sessionData ? (
                 <>
-                    <div>
-                        <strong>{sessionData.title}</strong>
+                    <div className="title-div">
+                        <h4>{sessionData.title}</h4>
                         <small>{new Date(sessionData.startedAt).toLocaleString()}</small>
+                        {
+                            sessionData.status === "active" ? <span style={{ color: "green", marginLeft: "0.5rem" }}>● Active</span> : <></>
+                        }
                     </div>
                     <p>{sessionData.content}</p>
                     <small>
@@ -182,10 +185,17 @@ export function EditNotesPage() {
 
                     <form onSubmit={handleSubmit}>
                         <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="New note title" />
-                        <textarea value={content} onChange={(e) => {
-                            setContent(e.target.value);
-                            setTotalTypedChars((prev) => prev + 1);
-                        }} placeholder="Note content" rows={10} />
+                        <textarea
+                            value={content}
+                            onChange={(e) => {
+                                setContent(e.target.value);
+                                setTotalTypedChars((prev) => prev + 1);
+                            }}
+                            onPaste={(e)=>{
+                                const pastedText = e.clipboardData.getData("text");
+                                setTotalPastedChars((prev) => prev + pastedText.length);
+                            }}
+                            placeholder="Note content" rows={10} />
                         <button style={{ marginTop: "1rem" }} type="submit" >Save Note</button>
                     </form>
                 </section>

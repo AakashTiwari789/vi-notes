@@ -1,12 +1,13 @@
 import noteModel from '../models/notes.model.js';
 import writingSessionModel from '../models/writingSession.model.js';
 
-export const createWritingSession = async ({ userId, content = '' }) => {
+export const createWritingSession = async ({ userId, content = '', title }) => {
     const session = await writingSessionModel.create({
         author: userId,
         startedAt: new Date(),
         status: "active",
         content,
+        title,
     });
 
     return session;

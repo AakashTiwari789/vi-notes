@@ -79,7 +79,7 @@ export const getNotesById = async (req, res) => {
             return res.status(404).json({ error: 'Note not found' });
         }
 
-        note.sessions = note.sessions.sort((a, b) => b.startedAt - a.startedAt);
+        const sessions = note.sessions.reverse(); // Show latest sessions first
 
         res.status(200).json({
             message: 'Note retrieved successfully',
@@ -87,7 +87,7 @@ export const getNotesById = async (req, res) => {
                 id: note._id,
                 title: note.title,
                 content: note.content,
-                sessions: note.sessions
+                sessions
             }
         });
 
@@ -159,10 +159,11 @@ export const editNoteById = async (req, res) => {
                     status: activeSession.status,
                     startedAt: activeSession.startedAt,
                     content: note.content,
+                    title: note.title,
                 },
             });
         }
-
+        // console.log("note title:", note.title);
         // No active session found -> create a new one
         const session = await createWritingSession({ userId, title: note.title, content: note.content });
         // console.log("New writing session created for note editing:", session);
