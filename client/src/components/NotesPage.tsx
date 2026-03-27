@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { MdEdit } from "react-icons/md";
 
 const API = import.meta.env.VITE_API_URL || "http://localhost:3000/api/v1";
