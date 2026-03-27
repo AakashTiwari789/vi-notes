@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-type Note = {
-    _id: string;
-    title: string;
-    content: string;
-};
+// type Note = {
+//     _id: string;
+//     title: string;
+//     content: string;
+// };
 
 type Session = {
     _id: string;
@@ -147,7 +147,7 @@ export function EditNotesPage() {
             // console.log("Version history sessions:", historyJson?.note?.sessions);
         })();
 
-    }, []);
+    }, [notesId, token]);
 
 
     const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
@@ -169,6 +169,13 @@ export function EditNotesPage() {
                     pasteRatio: totalTypedChars > 0 ? totalPastedChars / totalTypedChars : 0,
                 }),
             });
+            const json = await res.json().catch(() => ({}));
+
+            if (!res.ok) {
+                setError(json?.error || json?.message || `Request failed (${res.status})`);
+                return;
+            }
+
             navigate("/notes", { replace: true });
         })();
 
@@ -191,7 +198,7 @@ export function EditNotesPage() {
                                 setContent(e.target.value);
                                 setTotalTypedChars((prev) => prev + 1);
                             }}
-                            onPaste={(e)=>{
+                            onPaste={(e) => {
                                 const pastedText = e.clipboardData.getData("text");
                                 setTotalPastedChars((prev) => prev + pastedText.length);
                             }}
