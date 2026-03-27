@@ -1,8 +1,10 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
-const origin = process.env.CLIENT_URL || 'http://localhost:5173';
+const origin = process.env.CLIENT_URL ;
 const corsOptions = {
     origin,
     credentials: true,
